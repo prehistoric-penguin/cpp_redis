@@ -1,5 +1,10 @@
 language: cpp
 
+env:
+  global:
+    # Travis have 2 cores
+    - MAKEFLAGS="-j 2"
+
 compiler:
   - clang
   - gcc
@@ -33,4 +38,4 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install redis; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then (redis-server&); fi
 
-script: mkdir build && cd build && cmake .. -DBUILD_TESTS=true -DBUILD_EXAMPLES=true && make && GTEST_COLOR=1 ctest -VV
+script: mkdir build && cd build && cmake .. -DBUILD_TESTS=true -DBUILD_EXAMPLES=true && make $MAKEFLAGS && GTEST_COLOR=1 ctest -VV
