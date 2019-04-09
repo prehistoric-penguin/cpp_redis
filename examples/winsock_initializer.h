@@ -7,7 +7,7 @@
 class winsock_initializer {
 public:
   winsock_initializer() {
-    //! Windows netword DLL init
+    //! Windows network DLL init
     WORD version = MAKEWORD(2, 2);
     WSADATA data;
 
