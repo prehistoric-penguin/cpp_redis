@@ -204,11 +204,10 @@ endif (BUILD_EXAMPLES)
 # tests
 ###
 if (BUILD_TESTS)
+	include(CMake/DownloadGTest.cmake)
+
 	enable_testing()
 	add_subdirectory(tests)
-	ExternalProject_Add("googletest"
-						GIT_REPOSITORY "https://github.com/google/googletest.git"
-						CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/deps")
 	# Reset variable to false to ensure tacopie does no build tests
 	set(BUILD_TESTS false)
 endif (BUILD_TESTS)
