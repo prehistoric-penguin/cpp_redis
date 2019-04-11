@@ -77,10 +77,8 @@ main() {
 
 	client.sync_commit(std::chrono::milliseconds(100));
 
-	client.xread({Streams: {{session_name},
-	                        {message_id}},
-			             Count: 10,
-			             Block: 100}, reply_cmd);
+	client.xread({{{session_name}, {message_id}},
+				 10, 100}, reply_cmd);
 
 	client.sync_commit(std::chrono::milliseconds(100));
 
