@@ -49,7 +49,7 @@ namespace cpp_redis {
 			xstream_reply_t reply;
 	} consumer_reply_t;
 
-	class consumer_client_container {
+	class CPP_REDIS_EXPORT consumer_client_container {
 	public:
 			consumer_client_container();
 
@@ -65,7 +65,7 @@ namespace cpp_redis {
 
 	//typedef std::map<std::string, consumer_callback_container_t> consumer_callbacks_t;
 
-	class consumer {
+	class CPP_REDIS_EXPORT consumer {
 	public:
 			explicit consumer(std::string stream, std::string consumer,
 			                  size_t max_concurrency = std::thread::hardware_concurrency());

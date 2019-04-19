@@ -40,6 +40,7 @@
 #include <cpp_redis/network/redis_connection.hpp>
 #include <cpp_redis/network/tcp_client_iface.hpp>
 #include <cpp_redis/misc/deprecated.hpp>
+#include <cpp_redis/misc/port.hpp>
 
 namespace cpp_redis {
 
@@ -49,7 +50,7 @@ namespace cpp_redis {
 	 * The client support asynchronous requests, as well as synchronous ones. Moreover, commands pipelining is supported.
 	 *
 	 */
-	class client {
+	class CPP_REDIS_EXPORT client {
 	public:
 		/**
 		 * client type

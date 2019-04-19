@@ -31,6 +31,7 @@
 #include <cpp_redis/core/reply.hpp>
 #include <functional>
 #include <cpp_redis/impl/types.hpp>
+#include <cpp_redis/misc/port.hpp>
 
 
 namespace cpp_redis {
@@ -83,7 +84,7 @@ namespace cpp_redis {
 	 * @brief Replies
 	 */
 
-	class xmessage : public message_type {
+	class CPP_REDIS_EXPORT xmessage : public message_type {
 	public:
 			xmessage();
 
@@ -94,7 +95,7 @@ namespace cpp_redis {
 
 	typedef xmessage xmessage_t;
 
-	class xstream {
+	class CPP_REDIS_EXPORT xstream {
 	public:
 			explicit xstream(const reply_t &data);
 
@@ -106,7 +107,7 @@ namespace cpp_redis {
 
 	typedef xstream xstream_t;
 
-	class xinfo_reply {
+	class CPP_REDIS_EXPORT xinfo_reply {
 	public:
 			explicit xinfo_reply(const cpp_redis::reply &data);
 
@@ -119,7 +120,7 @@ namespace cpp_redis {
 			xmessage_t LastEntry;
 	};
 
-	class xstream_reply : public std::vector<xstream_t> {
+	class CPP_REDIS_EXPORT xstream_reply : public std::vector<xstream_t> {
 	public:
 			explicit xstream_reply(const reply_t &data);
 

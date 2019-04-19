@@ -27,6 +27,7 @@
 #include <vector>
 
 #include <cpp_redis/misc/optional.hpp>
+#include <cpp_redis/misc/port.hpp>
 
 #include <cstdint>
 
@@ -37,7 +38,7 @@ namespace cpp_redis {
  * That is, cpp_redis::reply objects are passed as parameters of commands callbacks and contain the server's response.
  *
  */
-	class reply {
+	class CPP_REDIS_EXPORT reply {
 	public:
 #define __CPP_REDIS_REPLY_ERR 0
 #define __CPP_REDIS_REPLY_BULK 1
@@ -285,4 +286,4 @@ namespace cpp_redis {
  * support for output
  *
  */
-std::ostream &operator<<(std::ostream &os, const cpp_redis::reply_t &reply);
+CPP_REDIS_EXPORT std::ostream &operator<<(std::ostream &os, const cpp_redis::reply_t &reply);

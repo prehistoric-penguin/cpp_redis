@@ -29,6 +29,7 @@
 #include <vector>
 
 #include <cpp_redis/misc/logger.hpp>
+#include <cpp_redis/misc/port.hpp>
 #include <cpp_redis/network/redis_connection.hpp>
 
 namespace cpp_redis {
@@ -39,7 +40,7 @@ namespace cpp_redis {
  * It is also meant to be used with cpp_redis::client and cpp_redis::subscriber for high availability (automatic failover if reconnection is enabled).
  *
  */
-	class sentinel {
+	class CPP_REDIS_EXPORT sentinel {
 	public:
 /**
  * ctor & dtor

@@ -32,6 +32,7 @@
 #include <cpp_redis/core/types.hpp>
 #include <cpp_redis/network/redis_connection.hpp>
 #include <cpp_redis/network/tcp_client_iface.hpp>
+#include <cpp_redis/misc/port.hpp>
 
 namespace cpp_redis {
 
@@ -42,7 +43,7 @@ namespace cpp_redis {
  *  * cpp_redis::client is not meant for that
  *
  */
-	class subscriber {
+	class CPP_REDIS_EXPORT subscriber {
 	public:
 #ifndef __CPP_REDIS_USE_CUSTOM_TCP_CLIENT
 
