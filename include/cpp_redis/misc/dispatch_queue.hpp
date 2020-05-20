@@ -1,0 +1,96 @@
+// The MIT License (MIT)
+//
+// Copyright (c) 11/27/18 nick. <nbatkins@gmail.com>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.#ifndef CPP_REDIS_CONVERT_HPP
+//
+// Code modified from
+// https://github.com/embeddedartistry/embedded-resources/blob/master/examples/cpp/dispatch.cpp
+//
+
+#ifndef CPP_REDIS_DISPATCH_QUEUE_HPP
+#define CPP_REDIS_DISPATCH_QUEUE_HPP
+
+#include <condition_variable>
+#include <cstdint>
+#include <cstdio>
+#include <functional>
+#include <mutex>
+#include <queue>
+#include <string>
+#include <thread>
+#include <vector>
+
+#include <cpp_redis/impl/serializer.ipp>
+
+namespace cpp_redis {
+using consumer_response_t = std::multimap<string_t, string_t>;
+
+typedef std::function<consumer_response_t(const cpp_redis::message_type &)>
+    dispatch_callback_t;
+
+using notify_callback_t = std::function<void(size_t size)>;
+
+typedef struct dispatch_callback_collection {
+  dispatch_callback_t callback;
+  message_type message;
+} dispatch_callback_collection_t;
+
+class dispatch_queue {
+
+public:
+  explicit dispatch_queue(string_t name,
+                          const notify_callback_t &notify_callback,
+                          size_t thread_cnt = 1);
+  ~dispatch_queue();
+
+  // dispatch and copy
+  void dispatch(const cpp_redis::message_type &message,
+                const dispatch_callback_t &op);
+  // dispatch and move
+  void dispatch(const cpp_redis::message_type &message,
+                dispatch_callback_t &&op);
+
+  // Deleted operations
+  dispatch_queue(const dispatch_queue &rhs) = delete;
+  dispatch_queue &operator=(const dispatch_queue &rhs) = delete;
+  dispatch_queue(dispatch_queue &&rhs) = delete;
+  dispatch_queue &operator=(dispatch_queue &&rhs) = delete;
+
+  size_t size();
+
+private:
+  string_t m_name;
+  std::mutex m_threads_lock;
+  mutable std::vector<std::thread> m_threads;
+  std::mutex m_mq_mutex;
+  std::queue<dispatch_callback_collection_t> m_mq;
+  std::condition_variable m_cv;
+  bool m_quit = false;
+
+  notify_callback_t notify_handler;
+
+  void dispatch_thread_handler();
+};
+
+using dispatch_queue_t = dispatch_queue;
+using dispatch_queue_ptr_t = std::unique_ptr<dispatch_queue>;
+} // namespace cpp_redis
+
+#endif // CPP_REDIS_DISPATCH_QUEUE_HPP

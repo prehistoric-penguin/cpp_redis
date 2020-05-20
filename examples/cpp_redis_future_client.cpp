@@ -9,12 +9,12 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -22,28 +22,31 @@
 
 #include <cpp_redis/cpp_redis>
 
-#include <iostream>
 #include "winsock_initializer.h"
+#include <iostream>
 
-int
-main(void) {
-  winsock_initializer winsock_init;
+int main() {
+  WINSOCK_INITIALIZER()
 
   //! Enable logging
-  cpp_redis::active_logger = std::unique_ptr<cpp_redis::logger>(new cpp_redis::logger);
+  cpp_redis::active_logger =
+      std::unique_ptr<cpp_redis::logger>(new cpp_redis::logger);
 
   cpp_redis::client client;
 
-  client.connect("127.0.0.1", 6379, [](const std::string& host, std::size_t port, cpp_redis::connect_state status) {
-    if (status == cpp_redis::connect_state::dropped) {
-      std::cout << "client disconnected from " << host << ":" << port << std::endl;
-    }
-  });
+  client.connect("127.0.0.1", 6379,
+                 [](const std::string &host, std::size_t port,
+                    cpp_redis::connect_state status) {
+                   if (status == cpp_redis::connect_state::dropped) {
+                     std::cout << "client disconnected from " << host << ":"
+                               << port << std::endl;
+                   }
+                 });
 
   //! Set a value
-  auto set    = client.set("hello", "42");
+  auto set = client.set("hello", "42");
   auto decrby = client.decrby("hello", 12);
-  auto get    = client.get("hello");
+  auto get = client.get("hello");
 
   // commands are pipelined and only sent when client.commit() is called
   // client.commit();
@@ -56,9 +59,10 @@ main(void) {
 
   std::cout << "set 'hello' 42: " << set.get() << std::endl;
 
-  cpp_redis::reply r = decrby.get();
+  cpp_redis::reply_t r = decrby.get();
   if (r.is_integer())
-    std::cout << "After 'hello' decrement by 12: " << r.as_integer() << std::endl;
+    std::cout << "After 'hello' decrement by 12: " << r.as_integer()
+              << std::endl;
 
   std::cout << "get 'hello': " << get.get() << std::endl;
 
